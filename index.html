@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+    <title>信笺·陈宇亲启</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #efebd0 0%, #dacaa4 100%);
+            font-family: 'Segoe UI', '华文楷书', '楷体', 'Georgia', 'Times New Roman', serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        /* 复古纸张纹理背景 */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" opacity="0.15"><path fill="none" d="M10 10 L190 10 M10 30 L190 30 M10 50 L190 50 M10 70 L190 70 M10 90 L190 90 M10 110 L190 110 M10 130 L190 130 M10 150 L190 150 M10 170 L190 170 M10 190 L190 190" stroke="%23806544" stroke-width="0.8"/><circle cx="40" cy="40" r="2" fill="%23806544"/><circle cx="80" cy="80" r="1.5" fill="%23806544"/><circle cx="160" cy="120" r="2" fill="%23806544"/></svg>');
+            background-repeat: repeat;
+            background-size: 28px 28px;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 主容器 */
+        .app-container {
+            width: 100%;
+            max-width: 780px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+            transition: all 0.2s ease;
+        }
+
+        /* 共用卡片样式 — 仿古信笺 */
+        .card {
+            background: #fffdf7;
+            border-radius: 2rem 1.8rem 2.5rem 1.8rem;
+            box-shadow: 0 28px 40px -18px rgba(0, 0, 0, 0.35), 0 1px 1px rgba(255, 248, 225, 0.8) inset;
+            transition: transform 0.3s ease, opacity 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            border: 1px solid #ecdcaa;
+            backdrop-filter: blur(0px);
+            overflow: hidden;
+        }
+
+        /* 登录面板样式 */
+        .login-card {
+            padding: 2.5rem 2rem 3rem;
+            text-align: center;
+            background: #fffcf3;
+            position: relative;
+        }
+
+        /* 手写风格装饰 */
+        .login-card::before {
+            content: "✧ 手札 ✧";
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: #c6a56e;
+            position: absolute;
+            top: 20px;
+            left: 28px;
+            font-family: monospace;
+            opacity: 0.6;
+        }
+
+        .login-card::after {
+            content: "☙  ❧";
+            font-size: 1rem;
+            color: #ccaa75;
+            position: absolute;
+            bottom: 20px;
+            right: 28px;
+            opacity: 0.5;
+        }
+
+        .seal-icon {
+            font-size: 4rem;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+            filter: drop-shadow(2px 4px 8px rgba(0, 0, 0, 0.1));
+            color: #b97f48;
+        }
+
+        h2 {
+            font-size: 1.9rem;
+            font-weight: 400;
+            letter-spacing: 5px;
+            color: #6c4c35;
+            border-bottom: 1.5px dashed #e9d6ae;
+            display: inline-block;
+            padding-bottom: 8px;
+            margin-bottom: 1.8rem;
+            font-family: '华文楷书', '楷体', cursive;
+        }
+
+        .sub {
+            color: #9b7b5c;
+            font-size: 0.85rem;
+            margin-bottom: 1.8rem;
+            font-style: italic;
+        }
+
+        .input-wrapper {
+            margin: 1.5rem 0 1.2rem;
+        }
+
+        .password-input {
+            width: 80%;
+            padding: 0.9rem 1.2rem;
+            font-size: 1.1rem;
+            background: #fffef9;
+            border: 1.8px solid #e5cf99;
+            border-radius: 60px;
+            outline: none;
+            font-family: 'Courier New', 'Segoe UI', monospace;
+            text-align: center;
+            letter-spacing: 2px;
+            color: #493525;
+            transition: all 0.2s;
+            box-shadow: inset 0 1px 3px #f2e5cf, 0 1px 1px rgba(0, 0, 0, 0.02);
+        }
+
+        .password-input:focus {
+            border-color: #c6965b;
+            box-shadow: 0 0 0 3px rgba(184, 128, 64, 0.2), inset 0 1px 3px #ffe6c7;
+            background: #ffffff;
+        }
+
+        .btn-unlock {
+            background: linear-gradient(135deg, #e2c185, #cfaa6b);
+            border: none;
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #3d2b1c;
+            border-radius: 60px;
+            cursor: pointer;
+            margin-top: 0.8rem;
+            font-family: '楷体', '华文楷书', serif;
+            letter-spacing: 2px;
+            transition: all 0.2s;
+            box-shadow: 0 5px 12px rgba(0, 0, 0, 0.1);
+            width: 70%;
+            border: 1px solid #faeec7;
+        }
+
+        .btn-unlock:hover {
+            background: linear-gradient(135deg, #ecce92, #daaf6e);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+            cursor: pointer;
+        }
+
+        .btn-unlock:active {
+            transform: translateY(1px);
+        }
+
+        .error-message {
+            color: #bd6e48;
+            font-size: 0.8rem;
+            margin-top: 1rem;
+            min-height: 2.2rem;
+            background: #fff4e8;
+            display: inline-block;
+            padding: 0.3rem 1.2rem;
+            border-radius: 40px;
+            font-family: monospace;
+            font-weight: 500;
+        }
+
+        .hint {
+            font-size: 0.7rem;
+            color: #b6956b;
+            margin-top: 1.5rem;
+            background: #faf1df;
+            display: inline-block;
+            padding: 0.2rem 1rem;
+            border-radius: 30px;
+        }
+
+        /* 图片展示卡片 */
+        .image-card {
+            background: #fef8ec;
+            padding: 1.2rem 1.2rem 1.5rem 1.2rem;
+            text-align: center;
+            display: none;
+            animation: fadeSlideUp 0.45s ease-out;
+        }
+
+        @keyframes fadeSlideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .image-frame {
+            background: #f7eedb;
+            border-radius: 2rem;
+            padding: 0.8rem;
+            box-shadow: inset 0 0 0 1px #fffcf0, 0 12px 22px -12px rgba(0, 0, 0, 0.3);
+            border: 1px solid #e8dbbc;
+        }
+
+        .precious-img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border-radius: 1.2rem;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .precious-img:hover {
+            transform: scale(1.01);
+        }
+
+        .img-caption {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: #a17f58;
+            letter-spacing: 1px;
+            font-family: monospace;
+            border-top: 1px dashed #ecdbaa;
+            display: inline-block;
+            padding-top: 0.6rem;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: 1px solid #dbbc87;
+            color: #a07446;
+            padding: 0.5rem 1.5rem;
+            border-radius: 40px;
+            margin-top: 1.2rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: '楷体', serif;
+            backdrop-filter: blur(4px);
+        }
+
+        .back-btn:hover {
+            background: #f5e7d3;
+            border-color: #b8884b;
+            color: #6a452c;
+        }
+
+        /* 音乐控件样式 */
+        .music-player {
+            margin-top: 1.2rem;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.8rem;
+            background: rgba(253, 247, 226, 0.7);
+            backdrop-filter: blur(4px);
+            padding: 0.4rem 1rem;
+            border-radius: 60px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid #e5cf9a;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .music-btn {
+            background: #efdfbf;
+            border: none;
+            font-size: 1.2rem;
+            padding: 0.3rem 0.9rem;
+            border-radius: 40px;
+            cursor: pointer;
+            color: #7b5a3c;
+            transition: all 0.2s;
+            font-family: monospace;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .music-btn:hover {
+            background: #e2ca9b;
+            transform: scale(1.02);
+        }
+        .music-status {
+            font-size: 0.7rem;
+            color: #9c7a54;
+            font-family: monospace;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 1.2rem;
+            font-size: 0.7rem;
+            color: #c8ae7e;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 550px) {
+            body {
+                padding: 0.8rem;
+            }
+            .login-card {
+                padding: 1.8rem 1.2rem 2.2rem;
+            }
+            .password-input {
+                width: 90%;
+                font-size: 1rem;
+            }
+            .btn-unlock {
+                width: 85%;
+            }
+            .image-card {
+                padding: 0.8rem;
+            }
+            h2 {
+                font-size: 1.6rem;
+            }
+            .seal-icon {
+                font-size: 3rem;
+            }
+            .music-player {
+                padding: 0.3rem 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- 登录卡片 (默认可见) -->
+    <div id="loginCard" class="card login-card">
+        <div class="seal-icon">✉️📜</div>
+        <h2>见字如晤</h2>
+        <div class="sub">· 匣中锦书 ·</div>
+        <div class="input-wrapper">
+            <input type="password" id="passwordInput" class="password-input" placeholder="········" autocomplete="off" aria-label="请输入信函密钥">
+        </div>
+        <button id="unlockBtn" class="btn-unlock">启封 · 展信</button>
+        <div id="errorMsg" class="error-message"></div>
+        <div class="hint">✨ 专属密钥 · 仅君可知 ✨</div>
+    </div>
+
+    <!-- 图片展示卡片 (初始隐藏) -->
+    <div id="imageCard" class="card image-card">
+        <div class="image-frame">
+            <img id="letterImage" class="precious-img" src="secret_letter.jpg" alt="陈宇亲启 · 珍贵手札" onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20400%20300%22%3E%3Crect%20width%3D%22400%22%20height%3D%22300%22%20fill%3D%22%23f3e9d2%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20dominant-baseline%3D%22middle%22%20text-anchor%3D%22middle%22%20fill%3D%22%23987654%22%20font-size%3D%2216%22%20font-family%3D%22monospace%22%3E📜%20请将图片命名为%20secret_letter.jpg%20并放在同一目录下%3C%2Ftext%3E%3C%2Fsvg%3E';">
+        </div>
+        <div class="img-caption">✧ 岁岁年年，友谊长存 ✧</div>
+        <button id="backToLoginBtn" class="back-btn">◀ 重封 · 另启</button>
+    </div>
+
+    <!-- 音乐控件 (始终显示) -->
+    <div class="music-player">
+        <button id="playPauseBtn" class="music-btn">🎵 播放</button>
+        <span id="musicStatus" class="music-status">静待佳音</span>
+    </div>
+    <footer>信笺 · 只予一人</footer>
+</div>
+
+<script>
+    // 正确的密码
+    const CORRECT_PASSWORD = "071017";
+
+    // DOM 元素
+    const loginCard = document.getElementById('loginCard');
+    const imageCard = document.getElementById('imageCard');
+    const passwordInput = document.getElementById('passwordInput');
+    const unlockBtn = document.getElementById('unlockBtn');
+    const errorMsgDiv = document.getElementById('errorMsg');
+    const backBtn = document.getElementById('backToLoginBtn');
+    const letterImg = document.getElementById('letterImage');
+
+    // 音乐相关
+    const audio = new Audio('bgm.mp3');  // 请将音乐文件命名为 bgm.mp3 并放在同目录下
+    audio.loop = true;                  // 循环播放
+    audio.volume = 0.5;                 // 音量 0.5（可调）
+    let isPlaying = false;
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const musicStatusSpan = document.getElementById('musicStatus');
+
+    // 更新按钮文字和状态
+    function updateMusicUI() {
+        if (isPlaying) {
+            playPauseBtn.innerHTML = '🎵 暂停';
+            musicStatusSpan.innerText = '音律流淌';
+        } else {
+            playPauseBtn.innerHTML = '🎵 播放';
+            musicStatusSpan.innerText = '静待佳音';
+        }
+    }
+
+    // 播放/暂停切换
+    function togglePlayPause() {
+        if (isPlaying) {
+            audio.pause();
+            isPlaying = false;
+        } else {
+            // 播放前确保音频已加载
+            audio.play().then(() => {
+                isPlaying = true;
+                updateMusicUI();
+            }).catch(err => {
+                console.warn('自动播放被阻止，请手动点击播放:', err);
+                // 如果播放失败，保持停止状态，但不影响UI
+                isPlaying = false;
+                updateMusicUI();
+                musicStatusSpan.innerText = '点击播放音乐';
+            });
+        }
+        updateMusicUI();
+    }
+
+    // 绑定音乐按钮事件
+    playPauseBtn.addEventListener('click', togglePlayPause);
+
+    // 音频加载错误处理
+    audio.addEventListener('error', () => {
+        musicStatusSpan.innerText = '未找到音乐文件';
+        playPauseBtn.disabled = true;
+        playPauseBtn.style.opacity = '0.5';
+        console.log('音乐文件 bgm.mp3 未找到，请将音乐命名为 bgm.mp3 并放在同目录下');
+    });
+
+    // 音频可以播放时启用按钮（如果之前被禁用）
+    audio.addEventListener('canplaythrough', () => {
+        playPauseBtn.disabled = false;
+        playPauseBtn.style.opacity = '1';
+        if (musicStatusSpan.innerText === '未找到音乐文件') {
+            musicStatusSpan.innerText = '静待佳音';
+        }
+    });
+
+    // 展示图片卡片，隐藏登录卡片
+    function showImageCard() {
+        loginCard.style.display = 'none';
+        imageCard.style.display = 'block';
+        setTimeout(() => {
+            imageCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+        passwordInput.value = '';
+        errorMsgDiv.innerText = '';
+    }
+
+    // 返回登录界面
+    function showLoginCard() {
+        imageCard.style.display = 'none';
+        loginCard.style.display = 'block';
+        passwordInput.value = '';
+        errorMsgDiv.innerText = '';
+        passwordInput.focus();
+    }
+
+    // 验证密码
+    function verifyAndUnlock() {
+        const enteredPwd = passwordInput.value.trim();
+        if (enteredPwd === CORRECT_PASSWORD) {
+            showImageCard();
+        } else {
+            errorMsgDiv.innerText = '❄️ 密钥不符，无法展信 ❄️';
+            loginCard.style.transform = 'translateX(0px)';
+            loginCard.style.transition = 'transform 0.1s ease';
+            let shakeCount = 0;
+            const shakeInterval = setInterval(() => {
+                if (shakeCount >= 4) {
+                    loginCard.style.transform = '';
+                    clearInterval(shakeInterval);
+                } else {
+                    const offset = shakeCount % 2 === 0 ? -5 : 5;
+                    loginCard.style.transform = `translateX(${offset}px)`;
+                    shakeCount++;
+                }
+            }, 40);
+            setTimeout(() => {}, 1800);
+            passwordInput.value = '';
+            passwordInput.focus();
+        }
+    }
+
+    unlockBtn.addEventListener('click', verifyAndUnlock);
+    passwordInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            verifyAndUnlock();
+        }
+    });
+    backBtn.addEventListener('click', showLoginCard);
+    passwordInput.addEventListener('input', () => {
+        if (errorMsgDiv.innerText !== '') {
+            errorMsgDiv.innerText = '';
+        }
+    });
+
+    // 初始化
+    loginCard.style.display = 'block';
+    imageCard.style.display = 'none';
+    passwordInput.focus();
+
+    // 图片加载提示
+    console.log('✨ 信件展示页已加载 ✨ 请确保将原图命名为 secret_letter.jpg 并放在同目录下');
+    console.log('🎵 音乐文件请命名为 bgm.mp3 并放在同目录下，点击播放按钮即可聆听');
+</script>
+</body>
+</html>
